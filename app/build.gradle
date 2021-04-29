@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -44,5 +45,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //Bureau lib
-    implementation 'com.github.shahhimanshu027:Bureau-Sdk:1.0.1'
+    implementation 'com.github.shahhimanshu027:Bureau-Sdk:1.0.4'
 }

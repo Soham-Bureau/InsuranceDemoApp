@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Test_Bureau_Library</string>
+    <string name="app_name">InsuranceDemoApp</string>
+    <string name="accessibility_service">Accessibility Service</string>
 </resources>
