@@ -3,23 +3,16 @@
 package com.example.test_bureau_library
 
 import android.Manifest
-import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ServiceInfo
 import android.os.Bundle
 import android.provider.Settings
-import android.view.accessibility.AccessibilityManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bureau.`interface`.*
 import com.bureau.helpers.AllInstalledAppsHelper
-import com.bureau.services.ASUrl
-import com.bureau.services.ValidationService
+import com.bureau.services.*
 import com.bureau.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -45,59 +38,19 @@ class MainActivity : AppCompatActivity() {
             )
         }
         initRequestPermission()
-        ValidationService.init(this, "12345", object : CallFilterInterface {
-            override fun existInContact(number: String?) {
-
+        CallFilteringService.initCallFilteringService(this, "12345","test@abc.com", object : CallFilterInterface {
+            override fun warning(number: String, reason: String) {
             }
 
-            override fun spam() {
+        })
+
+        SmsFilteringService.initSmsFilterService(this,"12345",object : SMSFilterInterface {
+            override fun warning(number: String, textBody: String, reason: String) {
             }
+        })
 
-            override fun aggravated() {
-            }
-
-            override fun warning() {
-            }
-
-            override fun validNumber(number: String?) {
-            }
-        }, object : SMSFilterInterface {
-            override fun existInContact(number: String?) {
-
-            }
-
-            override fun spam() {
-
-            }
-
-            override fun aggravated() {
-
-            }
-
-            override fun warning() {
-
-            }
-
-            override fun validNumber(number: String?) {
-
-            }
-
-        }, object : ApplicationFilterInterface {
-            override fun maliciousApps(list: ArrayList<String>) {
-                val commaSeparatedString = list.joinToString(separator = ", ")
-                Toast.makeText(
-                    this@MainActivity,
-                    "Malicious Apps --> $commaSeparatedString ",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-            override fun safeApp(appName: String) {
-
-            }
-        }, object : SIMFilterInterface {
-            override fun onSimChanged() {
-
+        AppFilteringService.initAppFilteringService(this, "", object : ApplicationFilterInterface {
+            override fun maliciousAppWarning(packageName: String, reason: String) {
             }
 
         })
@@ -106,36 +59,16 @@ class MainActivity : AppCompatActivity() {
             this,
             true,
             object : ApplicationFilterInterface {
-                override fun maliciousApps(list: ArrayList<String>) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Malicious Apps Activity --> $list ",
-                        Toast.LENGTH_LONG
-                    ).show()
+                override fun maliciousAppWarning(packageName: String, reason: String) {
                 }
 
-                override fun safeApp(appName: String) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "safeApp Apps Activity --> $appName ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             })
 
         //url filter callbacks
         ASUrl.initCallbacks(object : UrlFilterInterface {
-            override fun urlDetected(url: String) {
-                Toast.makeText(this@MainActivity, "urlDetected", Toast.LENGTH_SHORT).show()
+            override fun unSafeUrlWarning(url: String, reason: String) {
             }
 
-            override fun safeUrl(url: String) {
-                Toast.makeText(this@MainActivity, "safeUrl", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun unSafeUrl(url: String) {
-                Toast.makeText(this@MainActivity, "unSafeUrl", Toast.LENGTH_SHORT).show()
-            }
         })
         switch_accessibility_service.apply {
             isChecked = isAccessibilityServiceEnabled(this@MainActivity, ASUrl::class.java)
