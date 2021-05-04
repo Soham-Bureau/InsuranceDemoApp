@@ -45,5 +45,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //Bureau lib
-    implementation 'com.github.shahhimanshu027:Bureau-Sdk:1.1.1'
+    implementation 'com.github.shahhimanshu027:Bureau-Sdk:1.1.3'
 }
