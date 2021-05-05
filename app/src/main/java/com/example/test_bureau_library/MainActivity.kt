@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        AppFilteringService.initAppFilteringService(this, "", object : ApplicationFilterInterface {
+        AppFilteringService.initAppFilteringService(this, object : ApplicationFilterInterface {
             override fun maliciousAppWarning(packageName: String, reason: String) {
             }
 
